@@ -1,0 +1,211 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Configuration du document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Mise en page et format
+\documentclass[a4paper, 10pt]{article} % Article au format A4
+\usepackage[top=2cm, bottom=2cm,
+			left=2cm, right=2cm,
+			headheight=18pt]{geometry} % Marges
+
+%%% Infos
+\title{Projet Base de Données Compte rendu}
+\author{Adam BENOIT - Anaïs DOUET - Mathieu MEUNIER - Pierre POINAS - Steve LENING}
+\date{01 décembre 2023}
+
+%%% Utilisation des infos title, author et date
+\makeatletter
+\let\Titre\@title
+\let\Auteurs\@author
+\let\Date\@date
+\let\Ecole\@institute
+\makeatother
+
+%%% Police de caractères et langue
+\usepackage[french]{babel} %Document en français
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0pt}
+\usepackage{xspace} %Espaces corrects avec babel
+
+%%% Configuration des en-têtes et pieds de page
+\usepackage{fancyhdr} % En-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhead[L]{Compte rendu}
+\fancyhead[C]{Projet Base de Données}
+\fancyhead[R]{ENSIMAG 2A ISI}
+
+%%% Configuration de la table des matières
+\renewcommand{\thesection}{\Roman{section}.}
+\renewcommand{\thesubsection}{\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{\alph{subsubsection})}
+
+%%%Gestion des images
+\usepackage{graphicx} %Intégration d'images
+\graphicspath{{Figs/}}
+
+%%% Gestions des couleurs
+\usepackage[svgnames]{xcolor}
+
+%%% Mise en page
+\usepackage{pdflscape} %Mettre certaines pages au format paysage
+
+%%% Gestion des listes
+\usepackage{enumitem}
+
+\usepackage{tikz}
+\usepackage{svg}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\newcommand{\idee}[1]{\textcolor{blue}{#1}}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Contenu du document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%% Page de garde %%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\begin{center}
+  %%% Titre
+  \color{Navy}
+  \fontsize{35pt}{12.8pt}
+  \textbf{\Titre}\\
+  \vspace{20pt}
+  %%% Sous-titre
+  \color{Black}
+  \Huge
+  \textbf{Club de montagne}
+  \vfill
+  %%% Illustration
+  \includegraphics[width=0.9\textwidth]{logo_database-oracle.jpg} 
+  \vfill
+  %%% Auteurs
+  \normalsize
+  \textbf{\Auteurs}\\
+  Grenoble INP - Ensimag, UGA \\
+  Année 2023-2024
+\end{center}
+\end{titlepage}
+
+
+
+%%%%%%%%%%%%%%% Table des matières %%%%%%%%%%%%%%%
+\section*{Contexte du projet}
+Un club d'activités de montagne souhaite mettre en place une base de données afin de permettre la gestion des services proposés à leurs adhérents et au grand public. Le service proposé est simple :
+\begin{itemize}[label=$\bullet$]
+    \item l'ensemble des utilisateurs inscrits sur ce système ont la possibilité de faire des réservations de repas/nuits dans les refuges gérés par le club ;
+    \item seuls les adhérents du club ont la possibilité de s'inscrire à des formations et de réserver du matériel pour leurs sorties en montagne. 
+\end{itemize}
+Les caractéristiques du projet à implémenter sont décrites de manière plus exhaustives dans le sujet.
+
+
+
+\vspace{2em}
+
+\tableofcontents
+
+\newpage
+
+
+
+
+
+%%%%%%%%%%%%%% Remarques techniques %%%%%%%%%%%%%%
+\section{Analyse}
+
+\begin{tabular}{rlll}
+  mail\_refuge (str)  & $\rightarrow$ & nom\_refuge & (str) \\
+               & $\nrightarrow$ & telephone\_refuge & (str) \\
+               & $\rightarrow$ & secteur\_geographique & (str) \\
+              & $\rightarrow$ & presentation & (str) \\
+               & $\rightarrow$ & date\_ouverture & (date) \\
+               & $\rightarrow$ & date\_fermeture & (date) \\
+               & $\rightarrow$ & places\_repas & (int) \\
+              & $\rightarrow$ & places\_nuit & (int) \\
+              & $\rightarrow$ & prix\_nuitee & (int) \\
+\\
+  mail\_refuge & $\twoheadrightarrow$ & type\_moyen\_paiement & (str) \\
+  mail\_refuge & $\twoheadrightarrow$ & type\_repas & (str) \\
+  \\
+  mail\_refuge, type\_repas (str) & $\rightarrow$ & prix & (int) \\
+  \\
+  id\_formation (str) & $\rightarrow$ & nom\_formation & (str) \\
+               & $\rightarrow$ & date\_formation & (date) \\
+               & $\rightarrow$ & duree\_formation & (int) \\
+               & $\rightarrow$ & description\_formation & (str) \\
+               & $\rightarrow$ & places\_formation & (int) \\
+               & $\rightarrow$ & prix\_formation & (int) \\
+  \\
+  id\_formation & $\twoheadrightarrow$ & type\_activites & (str) \\
+  \\
+  marque (str), modèle (str), date\_achat (date) & $\rightarrow$ & categorie & (str) \\
+               & $\rightarrow$ & nb\_pieces & (int) \\
+               & $\rightarrow$ & prix\_casse & (int) \\
+               & $\rightarrow$ & description\_materiel & (str) \\
+               & $\rightarrow$ & date\_peremption & (date) \\
+  \\
+  marque, modèle, date\_achat & $\twoheadrightarrow$ & type\_activites & (str) \\
+  \\
+  categorie (str) & $\rightarrow$ & categorie\_parente & (str) \\
+  \\
+  id\_utilisateur (int) & $\rightarrow$ & somme\_due & (int) \\
+                        & $\rightarrow$ & somme\_remboursee & (int) \\
+                        & $\nrightarrow$ & id\_adherent & (int) \\
+  \\
+  mail\_membre (str) & $\rightarrow$ & mail\_membre & (str) \\ 
+                        & $\rightarrow$ & nom\_membre & (str) \\
+                        & $\rightarrow$ & mot\_de\_passe & (str) \\
+\\
+id\_reservation\_refuge (int) & $\rightarrow$ & date\_reservation\_ref & (date) \\
+                        & $\rightarrow$ & heure\_reservation\_ref & (int) \\
+                        & $\rightarrow$ & prix\_total\_reservation & (int) \\
+\\
+id\_reservation\_refuge, jour (int) & $\not\twoheadrightarrow$ & type\_repas & (str) \\
+\\
+id\_reservation\_formation (int) & $\rightarrow$ & rang\_attente & (int) \\
+\\
+id\_reservation\_materiel (int) & $\rightarrow$ & nb\_pieces & (int) \\
+                                & $\rightarrow$ & date\_recup & (date) \\
+                                & $\rightarrow$ & date\_rendu & (date) \\
+                                & $\nrightarrow$ & nb\_casse & (int) \\
+
+\end{tabular}
+
+\begin{landscape} \pagestyle{empty}
+\section{Conception}
+    \begin{figure}[h!]
+      %\vspace{-2em}
+      \includegraphics[width=\linewidth]{diagram.png}
+      \caption{Représentation du premier étage (seul) dans le carter}
+    \end{figure}
+\end{landscape}
+
+
+
+\section{Traduction en relationnel} % Implémentation dans Oracle
+
+\section{Requêtes \& Transactions}
+
+\section{Mode d'emploi du démonstrateur}
+
+\section{Bilan}
+\subsection{Organisation},
+\begin{enumerate}
+    \item \textbf{Analyse :} Tout le groupe
+    \begin{itemize}
+        \item Analyse statique
+        \item Dépendances fonctionnelles
+        \item Détermination des contraintes (valeur, multiplicité, contextuelles)
+    \end{itemize}
+    \item 
+\end{enumerate}
+\subsection{Point difficiles rencontrés}
+
+
+
+
+\end{document}
